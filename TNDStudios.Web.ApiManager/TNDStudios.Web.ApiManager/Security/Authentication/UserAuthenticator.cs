@@ -8,6 +8,9 @@ using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
+    /// <summary>
+    /// Standard user authenticator that reads from a Json file in a given location
+    /// </summary>
     public class UserAuthenticator : IUserAuthenticator
     {
         /// <summary>
@@ -50,10 +53,11 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         };
 
         /// <summary>
-        /// Authenticate a user by the security token provided (usually from the header value in the request)
+        /// Take a token (usually from the auth token in the header) and validate the
+        /// user
         /// </summary>
-        /// <param name="securityToken">The value of the security header</param>
-        /// <returns>The authenticated user</returns>
+        /// <param name="securityToken">The security token, usually from the header</param>
+        /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
         public SecurityUser AuthenticateToken(String securityToken)
         {
             // Not authorised by default
