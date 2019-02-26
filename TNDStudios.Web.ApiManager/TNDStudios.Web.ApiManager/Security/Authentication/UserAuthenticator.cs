@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
