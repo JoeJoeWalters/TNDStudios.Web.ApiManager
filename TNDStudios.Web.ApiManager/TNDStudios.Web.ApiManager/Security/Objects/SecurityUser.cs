@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TNDStudios.Web.ApiManager.Security.Objects
 {
+    /// <summary>
+    /// A user object specifically for defining the security context
+    /// of a potential user login
+    /// </summary>
     [JsonObject]
     public class SecurityUser
     {

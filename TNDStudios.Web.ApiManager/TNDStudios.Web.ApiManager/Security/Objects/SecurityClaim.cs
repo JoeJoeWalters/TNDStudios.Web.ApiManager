@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TNDStudios.Web.ApiManager.Security.Objects
 {
+    /// <summary>
+    /// The "claim" of what a security check is needed or what a 
+    /// user can claim they can do.
+    /// </summary>
     [JsonObject]
     public class SecurityClaim
     {
