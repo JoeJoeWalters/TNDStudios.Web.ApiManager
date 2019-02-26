@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Authors>The Naked Developer</Authors>
+    <Company>The Naked Developer</Company>
+    <Description>API / API Authentication and API Authorization handlers</Description>
+    <Copyright>The Naked Developer</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
