@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -105,6 +107,22 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
 
             // Create the required authentication ticket based on the underlaying scheme
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
+
+            // Assuming we now have a user to handle, we need to store this user in the session so that
+            // later on the other systems can use it to detect granular permissions
+            try
+            {
+                // Convert the user data to a json string to store on the session
+                var userData = JsonConvert.SerializeObject(user);
+
+                // If there is some data to transform for the current user otherwise it stays as a fail state
+                if (userData != null)
+                    Request.HttpContext.Session.SetString("CurrentUser", userData);
+            }
+            catch(Exception ex)
+            {
+                return AuthenticateResult.Fail(new Exception("Could not set the user session details"));
+            }
 
             // Return that the authentication was successful and return the authentication ticket
             return AuthenticateResult.Success(ticket);
