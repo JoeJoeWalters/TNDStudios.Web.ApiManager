@@ -10,6 +10,10 @@
     <AssemblyVersion>1.0.3.0</AssemblyVersion>
     <FileVersion>1.0.3.0</FileVersion>
     <Version>1.0.3</Version>
+    <PackageId>TNDStudios.Web.ApiManager</PackageId>
+    <Product>TNDStudios.Web.ApiManager</Product>
+    <AssemblyName>TNDStudios.Web.ApiManager</AssemblyName>
+    <RootNamespace>TNDStudios.Web.ApiManager</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

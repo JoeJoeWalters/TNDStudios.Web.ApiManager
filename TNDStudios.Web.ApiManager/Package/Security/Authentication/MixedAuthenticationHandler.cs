@@ -117,8 +117,13 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 var userData = JsonConvert.SerializeObject(user);
 
                 // If there is some data to transform for the current user otherwise it stays as a fail state
-                if (userData != null)
-                    Request.HttpContext.Session.SetString(Setup.CurrentUserSessionKey, userData);
+                if (Context?.Session != null)
+                {
+                    if (userData != null)
+                        Context.Session.SetString(Setup.CurrentUserSessionKey, userData);
+                }
+                else
+                    return AuthenticateResult.Fail(new Exception("Could not set the user session details"));
             }
             catch(Exception ex)
             {

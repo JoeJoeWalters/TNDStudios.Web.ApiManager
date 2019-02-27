@@ -25,11 +25,14 @@ namespace TNDStudios.Web.ApiManager.Controllers
                     SecurityUser contextUser = null;
 
                     // Attempt to get the raw json from the session for the current user
-                    var rawData = Request.HttpContext.Session.GetString(Setup.CurrentUserSessionKey);
+                    if (Request?.HttpContext?.Session != null)
+                    {
+                        var rawData = Request.HttpContext.Session.GetString(Setup.CurrentUserSessionKey);
 
-                    // If there is some data to transform for the current user otherwise it stays as a fail state
-                    if (rawData != null)
-                        contextUser = JsonConvert.DeserializeObject<SecurityUser>(rawData); // Cast the user json to the correct object type
+                        // If there is some data to transform for the current user otherwise it stays as a fail state
+                        if (rawData != null)
+                            contextUser = JsonConvert.DeserializeObject<SecurityUser>(rawData); // Cast the user json to the correct object type
+                    }
 
                     // Return the user that was stored in the user context session
                     return contextUser;

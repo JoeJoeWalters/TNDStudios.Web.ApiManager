@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNDStudios.Web.ApiManager", "TNDStudios.Web.ApiManager\TNDStudios.Web.ApiManager.csproj", "{42811EAE-8FFF-4211-B5D8-6AEE478B232A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Package", "Package\Package.csproj", "{42811EAE-8FFF-4211-B5D8-6AEE478B232A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website\Website.csproj", "{25B031D9-46B2-4F01-A443-E80C78D1C4B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{42811EAE-8FFF-4211-B5D8-6AEE478B232A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42811EAE-8FFF-4211-B5D8-6AEE478B232A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42811EAE-8FFF-4211-B5D8-6AEE478B232A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B031D9-46B2-4F01-A443-E80C78D1C4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B031D9-46B2-4F01-A443-E80C78D1C4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B031D9-46B2-4F01-A443-E80C78D1C4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B031D9-46B2-4F01-A443-E80C78D1C4B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
