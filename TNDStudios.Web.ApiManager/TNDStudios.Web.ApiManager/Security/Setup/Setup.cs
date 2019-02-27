@@ -1,14 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TNDStudios.Web.ApiManager.Security.Authentication;
 
-namespace TNDStudios.Web.ApiManager.Security.Setup
+namespace TNDStudios.Web.ApiManager.Security
 {
     /// <summary>
     /// Static class to handle extending properites of .Net core setups
     /// </summary>
     public static class Setup
     {
+        /// <summary>
+        /// Constants for the session item names
+        /// </summary>
+        public const String CurrentUserSessionKey = "CurrentUser";
+
         /// <summary>
         /// Extending the service collection so that the Startup class can initiate the
         /// authentication, authorisation and web api properties

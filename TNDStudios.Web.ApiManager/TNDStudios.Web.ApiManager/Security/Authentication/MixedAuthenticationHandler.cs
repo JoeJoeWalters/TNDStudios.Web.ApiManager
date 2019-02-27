@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
+using TNDStudios.Web.ApiManager.Security;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
@@ -117,11 +118,11 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
 
                 // If there is some data to transform for the current user otherwise it stays as a fail state
                 if (userData != null)
-                    Request.HttpContext.Session.SetString("CurrentUser", userData);
+                    Request.HttpContext.Session.SetString(Setup.CurrentUserSessionKey, userData);
             }
             catch(Exception ex)
             {
-                return AuthenticateResult.Fail(new Exception("Could not set the user session details"));
+                //return AuthenticateResult.Fail(new Exception("Could not set the user session details"));
             }
 
             // Return that the authentication was successful and return the authentication ticket
