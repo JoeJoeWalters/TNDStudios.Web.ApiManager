@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TNDStudios.Web.ApiManager.Security;
 using TNDStudios.Web.ApiManager.Security.Authentication;
+using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace Website
 {
@@ -25,7 +27,43 @@ namespace Website
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Set up the authentication service with the appropriate authenticator implementation
-            services.AddCustomAuthentication(new UserAuthenticator(""));
+            IUserAuthenticator userAuthenticator = new UserAuthenticator();
+            userAuthenticator.RefreshAccessList(new AccessControl()
+            {
+                Users = new List<SecurityUser>()
+                {
+                    new SecurityUser()
+                    {
+                        Authentication = new List<string>()
+                        {
+                            "basic",
+                            "apikey"
+                        },
+                        Claims = new List<SecurityClaim>()
+                        {
+                            new SecurityClaim()
+                            {
+                                Companies = new List<String>()
+                                {
+                                    "ba",
+                                    "gui"
+                                },
+                                Name = "admin",
+                                Permissions = new List<String>()
+                                {
+                                    "read",
+                                    "write"
+                                }
+                            }
+                        },
+                        Id = "7ac39504-53f1-47f5-96b9-3c2682962b8b",
+                        Key = "a2ffaf61-fde6-4b5d-b69d-5697321ea668",
+                        Password = "password",
+                        Username = "username"
+                    }
+                }
+            });
+            services.AddCustomAuthentication(userAuthenticator);
 
         }
 

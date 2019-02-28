@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
@@ -17,5 +19,13 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// <param name="securityToken">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
         Task<SecurityUser> AuthenticateToken(string securityToken);
+
+        /// <summary>
+        /// Refresh the list of cached users that are validated against
+        /// </summary>
+        /// <returns>If the refresh was successful</returns>
+        Boolean RefreshAccessList();
+        Boolean RefreshAccessList(Stream stream);
+        Boolean RefreshAccessList(AccessControl accessControl);
     }
 }

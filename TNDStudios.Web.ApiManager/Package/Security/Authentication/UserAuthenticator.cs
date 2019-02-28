@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,41 +18,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// <summary>
         /// Local cached list of users
         /// </summary>
-        private static AccessControl accessControl = new AccessControl()
-        {
-            Users = new List<SecurityUser>()
-            {
-                new SecurityUser()
-                {
-                    Authentication = new List<string>()
-                    {
-                        "basic",
-                        "apikey"
-                    },
-                    Claims = new List<SecurityClaim>()
-                    {
-                        new SecurityClaim()
-                        {
-                            Companies = new List<String>()
-                            {
-                                "ba",
-                                "gui"
-                            },
-                            Name = "admin",
-                            Permissions = new List<String>()
-                            {
-                                "read",
-                                "write"
-                            }
-                        }
-                    },
-                    Id = "7ac39504-53f1-47f5-96b9-3c2682962b8b",
-                    Key = "a2ffaf61-fde6-4b5d-b69d-5697321ea668",
-                    Password = "password",
-                    Username = "username"
-                }
-            }
-        };
+        private AccessControl accessControl = new AccessControl() { };
 
         /// <summary>
         /// Take a token (usually from the auth token in the header) and validate the
@@ -125,7 +93,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             }
             catch (Exception ex)
             {
-                throw ex; 
+                throw ex;
             }
 
             return await Task.FromResult<SecurityUser>(result);
@@ -135,9 +103,37 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// Default Constructor
         /// </summary>
         /// <param name="path">Path to the json file that holds the authentication / permission structure</param>
-        public UserAuthenticator(String path)
-        {
+        public UserAuthenticator()
+            => RefreshAccessList();
 
+        /// <summary>
+        /// Refresh the list of cached users that are validated against
+        /// </summary>
+        /// <returns>If the refresh was successful</returns>
+        public Boolean RefreshAccessList()
+            => RefreshAccessList(new AccessControl());
+
+        public Boolean RefreshAccessList(Stream stream)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return RefreshAccessList(
+                        JsonConvert.DeserializeObject<AccessControl>(reader.ReadToEnd())
+                        );
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public Boolean RefreshAccessList(AccessControl accessControl)
+        {
+            this.accessControl = accessControl ?? new AccessControl() { };
+            return true;
         }
     }
 }
