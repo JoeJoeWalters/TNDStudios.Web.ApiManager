@@ -1,4 +1,5 @@
-﻿using TNDStudios.Web.ApiManager.Security.Objects;
+﻿using System.Threading.Tasks;
+using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
@@ -15,6 +16,6 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// </summary>
         /// <param name="securityToken">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        SecurityUser AuthenticateToken(string securityToken);
+        Task<SecurityUser> AuthenticateToken(string securityToken);
     }
 }

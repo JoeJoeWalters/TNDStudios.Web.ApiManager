@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
-using TNDStudios.Web.ApiManager.Security;
-using System.Linq;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
@@ -38,9 +34,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         }
 
         /// <summary>
-        /// Authenticate the request
+        /// Authenticate the request against the cached user credentials
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The Success Or Failure Result Code</returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             // The security user that is found from the authentication process
@@ -57,16 +53,15 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 StringValues header = new StringValues();
                 try
                 {
-                    // Try and get the header from the request object
                     header = Request.Headers["Authorization"];
                 }
                 catch
                 {
-                    throw new Exception("No Authorisation Header Found"); // No header was found
+                    throw new Exception("No Authorisation Header Found");
                 }
 
                 // Do the authentication by passing it to the supplied user authenticator implementation
-                user = userAuthenticator.AuthenticateToken(header);
+                user = await userAuthenticator.AuthenticateToken(header);
             }
             catch (Exception ex)
             {
@@ -103,7 +98,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 });
             });
 
-            // Generate a new identity
+            // Generate a new identity and inject the claims in to the identity
             var identity = new ClaimsIdentity(claims, Scheme.Name) {  };
 
             // Create the principal based on the identity

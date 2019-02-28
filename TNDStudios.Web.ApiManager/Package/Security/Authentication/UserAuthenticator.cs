@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
@@ -57,7 +58,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// </summary>
         /// <param name="securityToken">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        public SecurityUser AuthenticateToken(String securityToken)
+        public async Task<SecurityUser> AuthenticateToken(String securityToken)
         {
             // Not authorised by default
             SecurityUser result = null;
@@ -82,26 +83,24 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         // Get the credentials from the basic authentication paramater part
                         var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
 
-                        // Split up the credentials in the parameter
+                        // Split up the credentials in the parameter and check the length being the correct size
                         var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
-
-                        // Retrieve the username and password to pass on to the authentication service
-                        var username = credentials[0];
-                        var password = credentials[1];
-
-                        // Authorised?
-                        result = accessControl
-                            .Users
-                            .Where(user =>
-                            {
-                                return
-                                    user.Password == password &&
-                                    user.Username == username;
-                            }).FirstOrDefault();
+                        if (credentials.Length == 2)
+                        {
+                            // Authorised?
+                            result = accessControl
+                                .Users
+                                .Where(user =>
+                                {
+                                    return
+                                        user.Password == credentials[1] &&
+                                        user.Username == credentials[0];
+                                }).FirstOrDefault();
+                        }
 
                         break;
 
-                    case "bearer": // Yes, Yes I know
+                    case "bearer":
                     case "apikey":
 
                         String token = authHeader.Parameter; // Get the token from the header
@@ -126,10 +125,10 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             }
             catch (Exception ex)
             {
-                throw ex; // Raise up the error so it can be logged
+                throw ex; 
             }
 
-            return result;
+            return await Task.FromResult<SecurityUser>(result);
         }
 
         /// <summary>
