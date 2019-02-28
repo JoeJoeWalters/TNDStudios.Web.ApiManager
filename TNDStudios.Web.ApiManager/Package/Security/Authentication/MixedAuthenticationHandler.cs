@@ -49,7 +49,6 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             // Try and parse the authorization header
             try
             {
-                // Get the authorisation header
                 StringValues header = new StringValues();
                 try
                 {
@@ -65,7 +64,6 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             }
             catch (Exception ex)
             {
-                // Something went wrong with the type or format of the header used to authorise
                 return AuthenticateResult.Fail(ex.Message);
             }
 
@@ -80,7 +78,8 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Sid, user.Key),
-                new Claim(ClaimTypes.AuthenticationMethod, String.Join(",", user.Authentication ?? new List<string>())),
+                new Claim(ClaimTypes.AuthenticationMethod, 
+                            String.Join(",", user.Authentication ?? new List<string>())),
             };
 
             // Loop each user claim
@@ -100,11 +99,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
 
             // Generate a new identity and inject the claims in to the identity
             var identity = new ClaimsIdentity(claims, Scheme.Name) {  };
-
-            // Create the principal based on the identity
             var principal = new ClaimsPrincipal(identity);
-
-            // Create the required authentication ticket based on the underlaying scheme
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
             // Return that the authentication was successful and return the authentication ticket
