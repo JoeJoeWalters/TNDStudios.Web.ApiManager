@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using TNDStudios.Web.ApiManager.Security;
 using TNDStudios.Web.ApiManager.Security.Objects;
@@ -22,18 +24,16 @@ namespace TNDStudios.Web.ApiManager.Controllers
                 try
                 {
                     // By default the result is a failure (null) indicating the user is not valid
-                    SecurityUser contextUser = null;
-
-                    // Attempt to get the raw json from the session for the current user
-                    if (Request?.HttpContext?.Session != null)
+                    SecurityUser contextUser = new SecurityUser()
                     {
-                        var rawData = Request.HttpContext.Session.GetString(Setup.CurrentUserSessionKey);
-
-                        // If there is some data to transform for the current user otherwise it stays as a fail state
-                        if (rawData != null)
-                            contextUser = JsonConvert.DeserializeObject<SecurityUser>(rawData); // Cast the user json to the correct object type
-                    }
-
+                        Id = User.FindFirst(claim => { return (claim.Type == ClaimTypes.NameIdentifier); })?.Value,
+                        Username = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Name); })?.Value,
+                        Key = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Sid); })?.Value,
+                        Authentication = 
+                            User.FindFirst(claim => { return (claim.Type == ClaimTypes.AuthenticationMethod); })?.Value
+                            .Split(",").ToList<String>()
+                    };
+                    
                     // Return the user that was stored in the user context session
                     return contextUser;
                 }
