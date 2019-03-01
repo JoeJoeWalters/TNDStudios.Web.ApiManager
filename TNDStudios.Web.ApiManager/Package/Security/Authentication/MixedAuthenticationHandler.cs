@@ -85,14 +85,14 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             // Loop each user claim
             user.Claims.ForEach(claim =>
             {
-                // .. for each company they have access to ..
-                claim.Companies.ForEach(company =>
+                // .. for each category they have access to ..
+                claim.Categories.ForEach(category =>
                 {
                     // .. for each permission granted ..
                     claim.Permissions.ForEach(permission =>
                     {
                         // .. add the new claim
-                        claims.Add(new Claim($"{claim.Name}_{company}", permission));
+                        claims.Add(ValidateAttribute.ToClaim(claim.Name, category, permission));
                     });
                 });
             });

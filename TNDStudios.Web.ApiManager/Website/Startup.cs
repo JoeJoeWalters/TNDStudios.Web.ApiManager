@@ -43,7 +43,7 @@ namespace Website
                         {
                             new SecurityClaim()
                             {
-                                Companies = new List<String>()
+                                Categories = new List<String>()
                                 {
                                     "ba",
                                     "gui"

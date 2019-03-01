@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
+using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
@@ -12,13 +15,15 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// <summary>
         /// Constructor for the validation attribute so that the claims for a user can be validated
         /// </summary>
-        /// <param name="Type">The resource that is being validated against (e.g. Admin section etc.)</param>
-        /// <param name="Company">The company silo that the permission may be for</param>
-        /// <param name="Permission">What permission is needed to gain access to this resource</param>
-        public ValidateAttribute(string Type, string Company, string Permission) : base(typeof(ValidateClaimFilter))
-        {
-            // Format the incoming parameters in to a new claim that can be checked against the user's own claims
-            Arguments = new object[] { new Claim($"{Type}_{Company}".ToLower().Trim(), Permission.ToLower().Trim()) };
-        }
+        public ValidateAttribute(string Type, string Category, string Permission) : base(typeof(ValidateClaimFilter))
+           => Arguments = new object[] { ToClaim(Type, Category, Permission) };
+
+        /// <summary>
+        /// Format the new claim properties in to a new claim object that can be pulled apart again
+        /// later to analyse it
+        /// </summary>
+        public static Claim ToClaim(String Type, String Category, String Permission)
+            => new Claim($"SEC_{Type}_{Category}".ToLower().Trim(), Permission.ToLower().Trim());
+
     }
 }

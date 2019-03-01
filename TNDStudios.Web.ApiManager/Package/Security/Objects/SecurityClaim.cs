@@ -17,7 +17,7 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         public String Name { get; set; }
 
         [JsonProperty]
-        public List<String> Companies { get; set; }
+        public List<String> Categories { get; set; }
 
         [JsonProperty]
         public List<String> Permissions { get; set; }

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using TNDStudios.Web.ApiManager.Security;
 using TNDStudios.Web.ApiManager.Security.Objects;
+using TNDStudios.Web.ApiManager.Extensions;
 
 namespace TNDStudios.Web.ApiManager.Controllers
 {
@@ -29,9 +30,10 @@ namespace TNDStudios.Web.ApiManager.Controllers
                         Id = User.FindFirst(claim => { return (claim.Type == ClaimTypes.NameIdentifier); })?.Value,
                         Username = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Name); })?.Value,
                         Key = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Sid); })?.Value,
-                        Authentication = 
+                        Authentication =
                             User.FindFirst(claim => { return (claim.Type == ClaimTypes.AuthenticationMethod); })?.Value
-                            .Split(",").ToList<String>()
+                            .Split(",").ToList<String>(),
+                        Claims = User.Claims.ToList<Claim>().ToSecurityClaims()
                     };
                     
                     // Return the user that was stored in the user context session
