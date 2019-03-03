@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Configuration;
 using System;
 using TNDStudios.Web.ApiManager.Security.Authentication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using TNDStudios.Web.ApiManager.Controllers;
 
 namespace TNDStudios.Web.ApiManager.Security
 {
@@ -14,28 +15,25 @@ namespace TNDStudios.Web.ApiManager.Security
     public static class Setup
     {
         /// <summary>
-        /// Constants for the session item names
+        /// Extension method to add custom logging to the basic service collection methods
         /// </summary>
-        public const String CurrentUserSessionKey = "CurrentUser";
-
-        public static IWebHost AddCustomBindings(this IWebHost webHost)
+        /// <param name="serviceCollection">The origional service collection from Starup</param>
+        /// <param name="configuration">The configuration file that was injected to Startup</param>
+        /// <returns>The modified service collection</returns>
+        public static IServiceCollection AddCustomLogging(
+            this IServiceCollection serviceCollection, 
+            IConfiguration configuration)
         {
-            ManagedController.WebHost = webHost;
-
-            return webHost;
-        }
-
-        public static IWebHostBuilder AddCustomLogging(this IWebHostBuilder webHostBuilder)
-        {
-            webHostBuilder.ConfigureLogging((hostingContext, logging) =>
+            serviceCollection.AddLogging(loggingBuilder =>
                  {
-                     logging.ClearProviders();
-                     logging.AddConsole();
-                     logging.AddDebug();
-                     logging.AddEventSourceLogger();
+                     loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
+                     loggingBuilder.ClearProviders();
+                     loggingBuilder.AddConsole();
+                     loggingBuilder.AddDebug();
+                     loggingBuilder.AddEventSourceLogger();
                  });
 
-            return webHostBuilder;
+            return serviceCollection;
         }
 
         /// <summary>

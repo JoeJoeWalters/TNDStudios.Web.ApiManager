@@ -26,6 +26,11 @@ namespace Website.Controllers
 
             return new string[] { "value1", "value2" };
         }
+
+        public ValuesController(ILogger<ManagedController> logger) : base(logger)
+        {
+
+        }
         
     }
 }

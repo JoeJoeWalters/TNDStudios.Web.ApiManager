@@ -15,14 +15,12 @@ namespace Website
         {
             CreateWebHostBuilder(args)
                 .Build()
-                .AddCustomBindings() // Add our own custom bindings / setup
                 .Run();
         }
 
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .AddCustomLogging(); // Add our own custom logging / setup
+                .UseStartup<Startup>();
     }
 }

@@ -21,19 +21,10 @@ namespace TNDStudios.Web.ApiManager.Controllers
     /// </summary>
     public class ManagedController : ControllerBase
     {
-        public static IWebHost WebHost { get; set; }
+        public ILogger<ManagedController> Logger { get; set; }
 
-        private ILogger logger;
-        public ILogger Logger 
-        {
-            get
-            {
-                if (logger == null)
-                    logger = WebHost.Services.GetRequiredService<ILogger>();
-
-                return logger; 
-            }
-        }
+        public ManagedController(ILogger<ManagedController> logger)
+            => Logger = logger;
 
         public SecurityUser CurrentUser
         {
