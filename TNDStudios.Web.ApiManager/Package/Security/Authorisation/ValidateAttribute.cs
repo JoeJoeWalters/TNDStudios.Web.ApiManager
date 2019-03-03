@@ -23,7 +23,17 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// later to analyse it
         /// </summary>
         public static Claim ToClaim(String Type, String Category, String Permission)
-            => new Claim($"SEC_{Type}_{Category}".ToLower().Trim(), Permission.ToLower().Trim());
+        {
+            // Lookup For System
+            String seperator = SecurityClaim.ClaimSeperator ?? "_";
+            Claim result = new Claim($"{SecurityClaim.ClaimPrefixIdentifier}{seperator}{Type}{seperator}{Category}".ToLower().Trim(), Permission.ToLower().Trim());
 
+            // Additional Properties so we don't have to decode the string to query it
+            result.Properties[SecurityClaim.TypePropertyName] = Type;
+            result.Properties[SecurityClaim.CategoryPropertyName] = Category;
+            result.Properties[SecurityClaim.PermissionPropertyName] = Permission;
+
+            return result;
+        }
     }
 }

@@ -13,6 +13,15 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
     [JsonObject]
     public class SecurityClaim
     {
+        /// <summary>
+        /// Constants used for applying property values to the encoded claims
+        /// </summary>
+        public const String ClaimPrefixIdentifier = "sec";
+        public const String ClaimSeperator = "_";
+        public const String TypePropertyName = "type";
+        public const String CategoryPropertyName = "category";
+        public const String PermissionPropertyName = "permission";
+
         [JsonProperty]
         public String Name { get; set; }
 

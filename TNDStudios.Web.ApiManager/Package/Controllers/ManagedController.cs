@@ -39,7 +39,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
                     // Return the user that was stored in the user context session
                     return contextUser;
                 }
-                catch
+                catch (Exception ex)
                 {
                     return null;
                 }

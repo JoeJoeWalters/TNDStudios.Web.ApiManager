@@ -19,6 +19,8 @@ namespace Website.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            CurrentUser?.Claims?.ForEach(claim => { });
+
             return new string[] { "value1", "value2" };
         }
     }
