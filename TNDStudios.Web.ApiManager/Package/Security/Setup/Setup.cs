@@ -2,6 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using TNDStudios.Web.ApiManager.Security.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using TNDStudios.Web.ApiManager.Controllers;
 
 namespace TNDStudios.Web.ApiManager.Security
 {
@@ -14,6 +17,26 @@ namespace TNDStudios.Web.ApiManager.Security
         /// Constants for the session item names
         /// </summary>
         public const String CurrentUserSessionKey = "CurrentUser";
+
+        public static IWebHost AddCustomBindings(this IWebHost webHost)
+        {
+            ManagedController.WebHost = webHost;
+
+            return webHost;
+        }
+
+        public static IWebHostBuilder AddCustomLogging(this IWebHostBuilder webHostBuilder)
+        {
+            webHostBuilder.ConfigureLogging((hostingContext, logging) =>
+                 {
+                     logging.ClearProviders();
+                     logging.AddConsole();
+                     logging.AddDebug();
+                     logging.AddEventSourceLogger();
+                 });
+
+            return webHostBuilder;
+        }
 
         /// <summary>
         /// Extending the service collection so that the Startup class can initiate the

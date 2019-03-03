@@ -9,6 +9,9 @@ using System.Text;
 using TNDStudios.Web.ApiManager.Security;
 using TNDStudios.Web.ApiManager.Security.Objects;
 using TNDStudios.Web.ApiManager.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TNDStudios.Web.ApiManager.Controllers
 {
@@ -18,6 +21,20 @@ namespace TNDStudios.Web.ApiManager.Controllers
     /// </summary>
     public class ManagedController : ControllerBase
     {
+        public static IWebHost WebHost { get; set; }
+
+        private ILogger logger;
+        public ILogger Logger 
+        {
+            get
+            {
+                if (logger == null)
+                    logger = WebHost.Services.GetRequiredService<ILogger>();
+
+                return logger; 
+            }
+        }
+
         public SecurityUser CurrentUser
         {
             get

@@ -45,8 +45,7 @@ namespace Website
                             {
                                 Categories = new List<String>()
                                 {
-                                    "ba",
-                                    "gui"
+                                    "values"
                                 },
                                 Name = "admin",
                                 Permissions = new List<String>()
