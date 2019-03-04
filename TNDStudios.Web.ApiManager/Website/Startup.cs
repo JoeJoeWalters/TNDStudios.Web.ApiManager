@@ -60,13 +60,15 @@ namespace Website
                 }
             });
 
+            //https://andrewlock.net/creating-a-rolling-file-logging-provider-for-asp-net-core-2-0/
+
             // Regular system setup
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Custom service setup for the API Manager
             services
-                .AddCustomLogging(Configuration)
+                .AddLogging()
                 .AddCustomAuthentication(userAuthenticator);
         }
 

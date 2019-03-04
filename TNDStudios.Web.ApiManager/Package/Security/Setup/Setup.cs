@@ -20,7 +20,7 @@ namespace TNDStudios.Web.ApiManager.Security
         /// <param name="serviceCollection">The origional service collection from Starup</param>
         /// <param name="configuration">The configuration file that was injected to Startup</param>
         /// <returns>The modified service collection</returns>
-        public static IServiceCollection AddCustomLogging(
+        /*public static IServiceCollection AddCustomLogging(
             this IServiceCollection serviceCollection, 
             IConfiguration configuration)
         {
@@ -34,7 +34,7 @@ namespace TNDStudios.Web.ApiManager.Security
                  });
 
             return serviceCollection;
-        }
+        }*/
 
         /// <summary>
         /// Extending the service collection so that the Startup class can initiate the

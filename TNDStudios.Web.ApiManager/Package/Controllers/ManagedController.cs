@@ -1,17 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using TNDStudios.Web.ApiManager.Security;
-using TNDStudios.Web.ApiManager.Security.Objects;
+﻿using TNDStudios.Web.ApiManager.Security.Objects;
 using TNDStudios.Web.ApiManager.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
+using System.Linq;
+using System;
 
 namespace TNDStudios.Web.ApiManager.Controllers
 {
