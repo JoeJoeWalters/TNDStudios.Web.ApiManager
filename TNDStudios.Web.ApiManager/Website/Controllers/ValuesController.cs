@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,15 +19,12 @@ namespace Website.Controllers
         {
             CurrentUser?.Claims?.ForEach(claim => { });
 
-            Logger.LogInformation("This is a message");
-
             return new string[] { "value1", "value2" };
         }
 
         public ValuesController(ILogger<ManagedController> logger) : base(logger)
         {
 
-        }
-        
+        }        
     }
 }
