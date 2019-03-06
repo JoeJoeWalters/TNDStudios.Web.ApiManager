@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TNDStudios.Web.ApiManager.Security;
+using System;
+using System.Collections.Generic;
+using TNDStudios.Web.ApiManager;
 using TNDStudios.Web.ApiManager.Security.Authentication;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
@@ -67,11 +68,15 @@ namespace Website
             // Custom service setup for the API Manager
             services
                 .AddLogging()
-                .AddCustomAuthentication(userAuthenticator);
+                .AddCustomAuthentication(userAuthenticator)
+                .AddCustomVersioning();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -93,6 +98,9 @@ namespace Website
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Custom app builder setup for the API Manager
+            app.UseCustomVersioning(provider);
         }
     }
 }

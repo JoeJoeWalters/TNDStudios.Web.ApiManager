@@ -8,13 +8,15 @@ using TNDStudios.Web.ApiManager.Security.Authentication;
 namespace Website.Controllers
 {
     [Authorize]
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.1")]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ManagedController
     {
         // GET api/values
         [Validate(Type: "admin", Category: "values", Permission: "read")]
-        [HttpGet]
+        [HttpGet, MapToApiVersion("1.0"), MapToApiVersion("1.1")]
         public ActionResult<IEnumerable<string>> Get()
         {
             CurrentUser?.Claims?.ForEach(claim => { });
