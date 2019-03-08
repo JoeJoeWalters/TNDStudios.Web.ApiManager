@@ -7,9 +7,9 @@
     <Description>API / API Authentication and API Authorization handlers</Description>
     <Copyright>The Naked Developer</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
-    <FileVersion>1.0.6.0</FileVersion>
-    <Version>1.0.6</Version>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <FileVersion>1.0.7.0</FileVersion>
+    <Version>1.0.7</Version>
     <PackageId>TNDStudios.Web.ApiManager</PackageId>
     <Product>TNDStudios.Web.ApiManager</Product>
     <AssemblyName>TNDStudios.Web.ApiManager</AssemblyName>
