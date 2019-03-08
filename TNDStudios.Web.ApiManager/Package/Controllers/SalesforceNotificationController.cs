@@ -2,19 +2,17 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TNDStudios.Web.ApiManager.Controllers;
+using System.Text;
 using TNDStudios.Web.ApiManager.Data.Salesforce;
 using TNDStudios.Web.ApiManager.Data.Soap;
 
-namespace Website.Controllers
+namespace TNDStudios.Web.ApiManager.Controllers
 {
-    public class SoapController : SoapManagedController
+    public class SalesforceNotificationController<T> : ManagedController 
+        where T: SalesforceObjectBase, new()
     {
-        public SoapController(ILogger<SoapManagedController> logger) : base(logger)
+        public SalesforceNotificationController(ILogger<ManagedController> logger) : base(logger)
         {
-
         }
 
         /// <summary>
@@ -25,7 +23,7 @@ namespace Website.Controllers
         /// <returns>A success or failure response</returns>
         [Consumes(@"application/soap+xml", otherContentTypes: @"text/xml")]
         [HttpPost]
-        public Boolean Post([FromBody]SoapMessage<SalesforceNotificationsBody<SalesforceObjectBase>> message)
+        public Boolean Post([FromBody]SoapMessage<SalesforceNotificationsBody<T>> message)
         {
             //message.Envelope.Body.Notifications.Items[0].SalesforceObject;
             return true;

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using TNDStudios.Web.ApiManager;
+using TNDStudios.Web.ApiManager.Data.Soap;
 using TNDStudios.Web.ApiManager.Security.Authentication;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
@@ -63,7 +64,10 @@ namespace Website
 
             // Regular system setup
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.InputFormatters.Add(new SoapFormatter());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Custom service setup for the API Manager
             services
@@ -74,8 +78,8 @@ namespace Website
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
-            IHostingEnvironment env, 
+            IApplicationBuilder app,
+            IHostingEnvironment env,
             IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
