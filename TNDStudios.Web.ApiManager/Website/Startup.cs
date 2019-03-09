@@ -63,15 +63,17 @@ namespace Website
             });
 
             // Regular system setup
-            services.AddCors();
-            services.AddMvc(options =>
-            {
-                options.InputFormatters.Add(new SoapFormatter());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddCors()
+                .AddLogging()
+                .AddMvc(options =>
+                    {
+                        options.InputFormatters.Add(new SoapFormatter());
+                    })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Custom service setup for the API Manager
             services
-                .AddLogging()
                 .AddCustomAuthentication(userAuthenticator)
                 .AddCustomVersioning();
         }

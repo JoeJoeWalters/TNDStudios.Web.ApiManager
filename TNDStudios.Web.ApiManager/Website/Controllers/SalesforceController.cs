@@ -16,10 +16,21 @@ namespace Website.Controllers
     [ApiController]
     public class SalesforceController : SalesforceNotificationController<SalesforceObjectBase>
     {
-        public SalesforceController(ILogger<SalesforceNotificationController<SalesforceObjectBase>> logger) 
+        public override List<string> AllowedOrganisationIds { get; } = 
+            new List<string>()
+            {
+                "00D80000000cDmQEAU"
+            };
+
+        public SalesforceController(ILogger<SalesforceNotificationController<SalesforceObjectBase>> logger)
             : base(logger)
         {
+        }
 
+        public override ActionResult<Boolean> Processor(
+            List<SalesforceNotification<SalesforceObjectBase>> notifications)
+        {
+            return base.Processor(notifications);
         }
     }
 }

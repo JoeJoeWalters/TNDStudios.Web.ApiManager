@@ -11,6 +11,11 @@ namespace TNDStudios.Web.ApiManager.Controllers
     public class SalesforceNotificationController<T> : ManagedController 
         where T: SalesforceObjectBase, new()
     {
+        /// <summary>
+        /// List of organisation Id' that will be allowed to post data to this controller
+        /// </summary>
+        public virtual List<String> AllowedOrganisationIds { get; } = new List<String>();
+
         public SalesforceNotificationController(ILogger<ManagedController> logger) : base(logger)
         {
         }
@@ -23,10 +28,27 @@ namespace TNDStudios.Web.ApiManager.Controllers
         /// <returns>A success or failure response</returns>
         [Consumes(@"application/soap+xml", otherContentTypes: @"text/xml")]
         [HttpPost]
-        public Boolean Post([FromBody]SoapMessage<SalesforceNotificationsBody<T>> message)
+        public ActionResult<Boolean> Post([FromBody]SoapMessage<SalesforceNotificationsBody<T>> message)
+            => ValidateRequest(message.Envelope.Body.Notifications) ? 
+                Processor(message.Envelope.Body.Notifications.Items) : 
+                new UnauthorizedObjectResult(false);
+
+        /// <summary>
+        /// Check to see if the organisation Id's in the valid organisation id's list match
+        /// </summary>
+        /// <param name="notifications">The header</param>
+        /// <returns>If the message is a valid one</returns>
+        public virtual Boolean ValidateRequest(SalesforceNotifications<T> notifications)
+            => AllowedOrganisationIds.Contains(notifications.OrganizationId);
+
+        /// <summary>
+        /// Process the notifications to be overloaded for each implementation
+        /// </summary>
+        /// <param name="notifications">The list of notifications from the notifications portion of the message</param>
+        /// <returns>If the messages could be processed or not</returns>
+        public virtual ActionResult<Boolean> Processor(List<SalesforceNotification<T>> notifications)
         {
-            //message.Envelope.Body.Notifications.Items[0].SalesforceObject;
-            return true;
+            return new OkObjectResult(true);
         }
     }
 }
