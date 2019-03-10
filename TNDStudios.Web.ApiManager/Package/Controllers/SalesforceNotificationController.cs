@@ -16,7 +16,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
         /// </summary>
         public virtual List<String> AllowedOrganisationIds { get; } = new List<String>();
 
-        public SalesforceNotificationController(ILogger<ManagedController> logger) : base(logger)
+        public SalesforceNotificationController(ILogger logger) : base(logger)
         {
         }
 

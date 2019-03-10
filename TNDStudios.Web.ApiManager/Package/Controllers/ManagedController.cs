@@ -14,9 +14,9 @@ namespace TNDStudios.Web.ApiManager.Controllers
     /// </summary>
     public class ManagedController : ControllerBase
     {
-        public ILogger<ManagedController> Logger { get; set; }
+        public ILogger Logger { get; set; }
 
-        public ManagedController(ILogger<ManagedController> logger)
+        public ManagedController(ILogger logger)
             => Logger = logger;
 
         public SecurityUser CurrentUser
