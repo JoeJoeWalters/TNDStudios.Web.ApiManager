@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TNDStudios.Web.ApiManager.Security.Objects
 {
@@ -22,13 +20,13 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         public const String CategoryPropertyName = "category";
         public const String PermissionPropertyName = "permission";
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.Always)]
         public String Name { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
         public List<String> Categories { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
         public List<String> Permissions { get; set; }
     }
 }

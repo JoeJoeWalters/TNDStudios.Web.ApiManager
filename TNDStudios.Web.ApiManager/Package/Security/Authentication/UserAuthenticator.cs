@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -44,8 +45,39 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                     throw new Exception("Authentication Header Is Malformed");
                 }
 
+                String token = authHeader.Parameter; // Get the token from the header
+
                 switch (authHeader.Scheme.ToLower().Trim())
                 {
+                    case "oauth":
+                    case "bearer":
+
+                        // Expects bearer to be JWT encoded                         
+                        SecurityToken jwtToken = null;
+                        try
+                        {
+                            jwtToken = (new JwtSecurityTokenHandler()).ReadToken(token);
+                        }
+                        catch { }
+
+                        // No failure, must be a valid JWT encoded bearer
+                        if (jwtToken != null)
+                        {
+                            // TODO: Get the user details from the JWT Token instead of the access control list
+                        }
+                        else
+                        {
+                            // Not a JWT encoded bearer so compare to the API Key instead
+                            result = accessControl
+                                .Users
+                                .Where(user =>
+                                {
+                                    return user.Key == token;
+                                }).FirstOrDefault();
+                        }
+
+                        break;
+
                     case "basic":
 
                         // Get the credentials from the basic authentication paramater part
@@ -67,11 +99,8 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         }
 
                         break;
-
-                    case "bearer":
+                        
                     case "apikey":
-
-                        String token = authHeader.Parameter; // Get the token from the header
 
                         result = accessControl
                             .Users
@@ -79,10 +108,6 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                             {
                                 return user.Key == token;
                             }).FirstOrDefault();
-
-                        break;
-
-                    case "oauth":
 
                         break;
 

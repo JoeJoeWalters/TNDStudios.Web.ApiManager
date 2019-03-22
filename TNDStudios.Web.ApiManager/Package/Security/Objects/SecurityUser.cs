@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TNDStudios.Web.ApiManager.Security.Objects
 {
@@ -13,22 +11,28 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
     [JsonObject]
     public class SecurityUser
     {
-        [JsonProperty]
+        [JsonProperty(Required = Required.Always)]
         public String Id { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
         public String Key { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
+        public String ClientId { get; set; }
+
+        [JsonProperty(Required = Required.AllowNull)]
+        public String ClientSecret { get; set; }
+
+        [JsonProperty(Required = Required.Always)]
         public List<String> Authentication { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.Always)]
         public String Username { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
         public String Password { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(Required = Required.AllowNull)]
         public List<SecurityClaim> Claims { get; set; }
     }
 }
