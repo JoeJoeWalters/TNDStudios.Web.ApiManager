@@ -52,7 +52,8 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                     case "oauth":
                     case "bearer":
 
-                        // Expects bearer to be JWT encoded                         
+                        // Expects bearer to be JWT encoded       
+                        // https://jwt.io/
                         SecurityToken jwtToken = null;
                         try
                         {
@@ -64,6 +65,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         if (jwtToken != null)
                         {
                             // TODO: Get the user details from the JWT Token instead of the access control list
+                            JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)jwtToken;
                         }
                         else
                         {
