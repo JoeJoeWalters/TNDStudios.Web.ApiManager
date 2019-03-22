@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using TNDStudios.Web.ApiManager;
@@ -36,7 +38,8 @@ namespace Website
                         Authentication = new List<string>()
                         {
                             "basic",
-                            "apikey"
+                            "apikey",
+                            "oauth2"
                         },
                         Claims = new List<SecurityClaim>()
                         {
