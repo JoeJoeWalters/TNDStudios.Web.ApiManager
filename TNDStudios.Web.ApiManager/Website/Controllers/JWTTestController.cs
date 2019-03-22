@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace Website.Controllers
@@ -22,12 +24,7 @@ namespace Website.Controllers
             //  Finally create a Token
             var header = new JwtHeader(credentials);
 
-            var payload = new JwtPayload
-               {
-                   { "some ", "hello "},
-                   { "scope", "http://dummy.com/"},
-               };
-
+            var payload = new JwtPayload("TNDStudios", "Audience", new List<Claim>() { new Claim("Roles", "Admin"), new Claim("Roles", "Finance") }, DateTime.Now, DateTime.Now  );
             //
             var secToken = new JwtSecurityToken(header, payload);
             var handler = new JwtSecurityTokenHandler();
