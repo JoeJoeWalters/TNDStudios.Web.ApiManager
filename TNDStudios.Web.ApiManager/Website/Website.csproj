@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Package\Package.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Users.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

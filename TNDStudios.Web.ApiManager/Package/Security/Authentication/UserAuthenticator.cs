@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TNDStudios.Web.ApiManager.Security.OAuth;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
@@ -20,6 +21,48 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// Local cached list of users
         /// </summary>
         private AccessControl accessControl = new AccessControl() { };
+
+        public async Task<SecurityUser> AuthenticateOAuth(OAuthTokenRequest tokenRequest)
+        {
+            // Not a JWT encoded bearer so compare to the API Key instead
+            try
+            {
+                switch (tokenRequest.Type)
+                {
+                    case OAuthTokenRequest.GrantType.client_credentials:
+
+                        return accessControl
+                            .Users
+                            .Where(user =>
+                            {
+                                return
+                                    user.ClientId == tokenRequest.ClientId &&
+                                    user.ClientSecret == tokenRequest.ClientSecret &&
+                                    user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
+                            }).FirstOrDefault();
+
+                    case OAuthTokenRequest.GrantType.password:
+
+                        return accessControl
+                            .Users
+                            .Where(user =>
+                            {
+                                return
+                                    user.Username == tokenRequest.Username &&
+                                    user.Password == tokenRequest.Password &&
+                                    user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
+                            }).FirstOrDefault();
+
+                    default:
+
+                        return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// Take a token (usually from the auth token in the header) and validate the
@@ -74,7 +117,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                 .Users
                                 .Where(user =>
                                 {
-                                    return user.Key == token;
+                                    return
+                                        user.Key == token &&
+                                        user.Authentication.Contains(SecurityUser.AuthenticationType.apikey);
                                 }).FirstOrDefault();
                         }
 
@@ -96,7 +141,8 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                 {
                                     return
                                         user.Password == credentials[1] &&
-                                        user.Username == credentials[0];
+                                        user.Username == credentials[0] &&
+                                        user.Authentication.Contains(SecurityUser.AuthenticationType.basic);
                                 }).FirstOrDefault();
                         }
 
@@ -108,7 +154,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                             .Users
                             .Where(user =>
                             {
-                                return user.Key == token;
+                                return 
+                                    user.Key == token &&
+                                    user.Authentication.Contains(SecurityUser.AuthenticationType.apikey);
                             }).FirstOrDefault();
 
                         break;
@@ -151,7 +199,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         );
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }

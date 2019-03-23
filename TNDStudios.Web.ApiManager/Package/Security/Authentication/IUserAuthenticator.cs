@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using TNDStudios.Web.ApiManager.Security.OAuth;
 using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
@@ -13,13 +14,20 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
     public interface IUserAuthenticator
     {
         /// <summary>
-        /// Take a token (usually from the auth token in the header) and validate the
-        /// user
+        /// Take an OAuth grant request (usually from the auth token in the header) and validate the
+        /// user (or resource depending on how you look at it)
         /// </summary>
-        /// <param name="securityToken">The security token, usually from the header</param>
+        /// <param name="token">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        Task<SecurityUser> AuthenticateToken(string securityToken);
+        Task<SecurityUser> AuthenticateToken(String token);
 
+        /// <summary>
+        /// Authenticate the client id and secret against the "users" (clients in their own right essentially)
+        /// </summary>
+        /// <param name="tokenRequest">OAuth Request Payload</param>
+        /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
+        Task<SecurityUser> AuthenticateOAuth(OAuthTokenRequest tokenRequest);
+        
         /// <summary>
         /// Refresh the list of cached users that are validated against
         /// </summary>

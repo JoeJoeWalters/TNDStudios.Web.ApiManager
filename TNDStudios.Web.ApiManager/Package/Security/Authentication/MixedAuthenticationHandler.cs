@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -79,7 +80,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Sid, user.Key),
                 new Claim(ClaimTypes.AuthenticationMethod, 
-                            String.Join(",", user.Authentication ?? new List<string>())),
+                            String.Join(",", 
+                                user.Authentication.Select(auth => auth.ToString()) ?? 
+                                new List<string>())),
             };
 
             // Loop each user claim

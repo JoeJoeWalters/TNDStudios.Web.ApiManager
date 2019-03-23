@@ -32,8 +32,10 @@ namespace TNDStudios.Web.ApiManager.Controllers
                         Username = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Name); })?.Value,
                         Key = User.FindFirst(claim => { return (claim.Type == ClaimTypes.Sid); })?.Value,
                         Authentication =
-                            User.FindFirst(claim => { return (claim.Type == ClaimTypes.AuthenticationMethod); })?.Value
-                            .Split(",").ToList<String>(),
+                            User.FindFirst(claim => {return (claim.Type == ClaimTypes.AuthenticationMethod); })?.Value
+                                        .Split(",")
+                                        .Select(item => (SecurityUser.AuthenticationType)Enum.Parse(typeof(SecurityUser.AuthenticationType), item))
+                                        .ToList(),
                         Claims = User.Claims.ToList<Claim>().ToSecurityClaims()
                     };
                     

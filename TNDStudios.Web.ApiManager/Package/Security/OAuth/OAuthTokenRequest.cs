@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 
 namespace TNDStudios.Web.ApiManager.Security.OAuth
@@ -7,17 +8,31 @@ namespace TNDStudios.Web.ApiManager.Security.OAuth
     /// Request for a set of credentials (client id, secret etc.)
     /// to be validated to give back an access token
     /// https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
+    /// https://www.oauth.com/oauth2-servers/access-tokens/password-grant/
     /// </summary>
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class OAuthTokenRequest
     {
-        [JsonProperty(Required = Required.Always, PropertyName = "grant_type")]
-        public String GrantType { get; set; } = "client_credentials";
+        public enum GrantType
+        {
+            client_credentials,
+            password
+        }
 
-        [JsonProperty(Required = Required.Always, PropertyName = "client_id")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty(Required = Required.Always, PropertyName = "grant_type")]
+        public GrantType Type { get; set; } = GrantType.client_credentials;
+
+        [JsonProperty(Required = Required.Default, PropertyName = "client_id")]
         public String ClientId { get; set; } = null;
 
-        [JsonProperty(Required = Required.Always, PropertyName = "client_secret")]
+        [JsonProperty(Required = Required.Default, PropertyName = "client_secret")]
         public String ClientSecret { get; set; } = null;
+
+        [JsonProperty(Required = Required.Default, PropertyName = "username")]
+        public String Username { get; set; } = String.Empty;
+
+        [JsonProperty(Required = Required.Default, PropertyName = "password")]
+        public String Password { get; set; } = String.Empty;
     }
 }

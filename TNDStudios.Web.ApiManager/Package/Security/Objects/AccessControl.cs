@@ -11,7 +11,7 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
     [JsonObject]
     public class AccessControl
     {
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.Default)]
         public List<SecurityUser> Users { get; set; }
     }
 }

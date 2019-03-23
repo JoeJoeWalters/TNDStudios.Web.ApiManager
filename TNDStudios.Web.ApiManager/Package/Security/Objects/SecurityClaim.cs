@@ -23,10 +23,10 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         [JsonProperty(Required = Required.Always)]
         public String Name { get; set; }
 
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.Default)]
         public List<String> Categories { get; set; }
 
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.Default)]
         public List<String> Permissions { get; set; }
     }
 }

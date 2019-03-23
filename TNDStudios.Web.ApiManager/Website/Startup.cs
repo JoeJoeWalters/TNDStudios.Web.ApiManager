@@ -2,16 +2,13 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using TNDStudios.Web.ApiManager;
 using TNDStudios.Web.ApiManager.Data.Soap;
 using TNDStudios.Web.ApiManager.Security.Authentication;
-using TNDStudios.Web.ApiManager.Security.Objects;
 
 namespace Website
 {
@@ -28,42 +25,9 @@ namespace Website
         public void ConfigureServices(IServiceCollection services)
         {
             // Set up the authentication service with the appropriate authenticator implementation
+            FileStream accessControl = File.OpenRead(Path.Combine(Environment.CurrentDirectory, "users.json"));
             IUserAuthenticator userAuthenticator = new UserAuthenticator();
-            userAuthenticator.RefreshAccessList(new AccessControl()
-            {
-                Users = new List<SecurityUser>()
-                {
-                    new SecurityUser()
-                    {
-                        Authentication = new List<string>()
-                        {
-                            "basic",
-                            "apikey",
-                            "oauth2"
-                        },
-                        Claims = new List<SecurityClaim>()
-                        {
-                            new SecurityClaim()
-                            {
-                                Categories = new List<String>()
-                                {
-                                    "values"
-                                },
-                                Name = "admin",
-                                Permissions = new List<String>()
-                                {
-                                    "read",
-                                    "write"
-                                }
-                            }
-                        },
-                        Id = "7ac39504-53f1-47f5-96b9-3c2682962b8b",
-                        Key = "a2ffaf61-fde6-4b5d-b69d-5697321ea668",
-                        Password = "password",
-                        Username = "username"
-                    }
-                }
-            });
+            userAuthenticator.RefreshAccessList(accessControl);
 
             // Regular system setup
             services
