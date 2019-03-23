@@ -15,6 +15,7 @@ namespace TNDStudios.Web.ApiManager.Security.OAuth
     {
         public enum GrantType
         {
+            authorization_code,
             client_credentials,
             password
         }
@@ -34,5 +35,11 @@ namespace TNDStudios.Web.ApiManager.Security.OAuth
 
         [JsonProperty(Required = Required.Default, PropertyName = "password")]
         public String Password { get; set; } = String.Empty;
+
+        [JsonProperty(Required = Required.Default, PropertyName = "code")]
+        public String Code { get; set; } = String.Empty;
+
+        [JsonProperty(Required = Required.Default, PropertyName = "redirect_uri")]
+        public String RedirectUri { get; set; } = String.Empty;
     }
 }

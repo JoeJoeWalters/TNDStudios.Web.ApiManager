@@ -53,6 +53,17 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                     user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
                             }).FirstOrDefault();
 
+                    case OAuthTokenRequest.GrantType.authorization_code:
+
+                        return accessControl
+                            .Users
+                            .Where(user =>
+                            {
+                                return
+                                    user.Key == tokenRequest.Code &&
+                                    user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
+                            }).FirstOrDefault();
+
                     default:
 
                         return null;
