@@ -38,6 +38,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
         /// </summary>
         /// <param name="notifications">The header</param>
         /// <returns>If the message is a valid one</returns>
+        [NonAction]
         public virtual Boolean ValidateRequest(SalesforceNotifications<T> notifications)
             => AllowedOrganisationIds.Contains(notifications.OrganizationId);
 
@@ -46,6 +47,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
         /// </summary>
         /// <param name="notifications">The list of notifications from the notifications portion of the message</param>
         /// <returns>If the messages could be processed or not</returns>
+        [NonAction]
         public virtual ActionResult<Boolean> Processor(List<SalesforceNotification<T>> notifications)
         {
             return new OkObjectResult(true);

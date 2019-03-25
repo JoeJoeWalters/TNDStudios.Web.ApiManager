@@ -27,6 +27,7 @@ namespace Website.Controllers
         {
         }
 
+        [NonAction]
         public override ActionResult<Boolean> Processor(
             List<SalesforceNotification<SalesforceObjectBase>> notifications)
         {
