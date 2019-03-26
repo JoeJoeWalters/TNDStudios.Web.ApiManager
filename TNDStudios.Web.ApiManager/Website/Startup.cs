@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
+using System.Text;
 using TNDStudios.Web.ApiManager;
 using TNDStudios.Web.ApiManager.Data.Soap;
 using TNDStudios.Web.ApiManager.Security.Authentication;
@@ -39,7 +41,16 @@ namespace Website
         {
             // Set up the authentication service with the appropriate authenticator implementation
             FileStream accessControl = File.OpenRead(Path.Combine(Environment.CurrentDirectory, "users.json"));
-            IUserAuthenticator userAuthenticator = new UserAuthenticator();
+            IUserAuthenticator userAuthenticator = new UserAuthenticator(
+                                                        new TokenValidationParameters()
+                                                        {
+                                                            ValidateLifetime = true,
+                                                            ValidateAudience = true,
+                                                            ValidateIssuer = true,
+                                                            ValidIssuer = JWTIssuer,
+                                                            ValidAudience = JWTAudience,
+                                                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTKey))
+                                                        });
             userAuthenticator.RefreshAccessList(accessControl);
 
             // Regular system setup

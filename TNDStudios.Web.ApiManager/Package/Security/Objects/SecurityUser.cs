@@ -25,22 +25,22 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         public String Id { get; set; }
 
         [JsonProperty(Required = Required.AllowNull)]
-        public String Key { get; set; }
+        public String Key { get; set; } = String.Empty;
 
         [JsonProperty(Required = Required.Default)]
-        public String ClientId { get; set; }
+        public String ClientId { get; set; } = String.Empty;
 
         [JsonProperty(Required = Required.Default)]
-        public String ClientSecret { get; set; }
-        
+        public String ClientSecret { get; set; } = String.Empty;
+
         [JsonProperty("Authentication", ItemConverterType = typeof(StringEnumConverter))]
         public List<AuthenticationType> Authentication { get; set; }
 
         [JsonProperty(Required = Required.Always)]
-        public String Username { get; set; }
+        public String Username { get; set; } = String.Empty;
 
         [JsonProperty(Required = Required.Default)]
-        public String Password { get; set; }
+        public String Password { get; set; } = String.Empty;
 
         [JsonProperty(Required = Required.Default)]
         public List<SecurityClaim> Claims { get; set; }

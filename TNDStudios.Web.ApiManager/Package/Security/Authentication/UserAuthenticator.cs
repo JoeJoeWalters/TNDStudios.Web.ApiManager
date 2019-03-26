@@ -1,10 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.OAuth;
@@ -21,6 +23,8 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// Local cached list of users
         /// </summary>
         private AccessControl accessControl = new AccessControl() { };
+
+        public TokenValidationParameters JWTValidationParams { get; internal set; }
 
         public async Task<SecurityUser> AuthenticateOAuth(OAuthTokenRequest tokenRequest)
         {
@@ -109,9 +113,11 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         // Expects bearer to be JWT encoded       
                         // https://jwt.io/
                         SecurityToken jwtToken = null;
+                        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
                         try
                         {
-                            jwtToken = (new JwtSecurityTokenHandler()).ReadToken(token);
+                            jwtToken = tokenHandler.ReadToken(token);
                         }
                         catch { }
 
@@ -120,6 +126,37 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         {
                             // TODO: Get the user details from the JWT Token instead of the access control list
                             JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)jwtToken;
+
+                            // Validate the token and get the principal
+                            SecurityToken validatedToken = null;
+                            IPrincipal principal = null;
+                            try
+                            {
+                                principal = tokenHandler.ValidateToken(
+                                                            token,
+                                                            JWTValidationParams,
+                                                            out validatedToken);
+                            }
+                            catch { }
+
+                            // Did we gain a principal?
+                            if (principal != null && validatedToken != null)
+                            {
+                                // Transpose the principal and the token details to the user
+                                return new SecurityUser()
+                                {
+                                    Id = jwtSecurityToken.Claims.Where(claim => claim.Type == "id").FirstOrDefault().Value,
+                                    Key = String.Empty,
+                                    Username = String.Empty,
+                                    Authentication = new List<SecurityUser.AuthenticationType>()
+                                    {
+                                        SecurityUser.AuthenticationType.oauth
+                                    },
+                                    Claims = new List<SecurityClaim>()
+                                    {
+                                    }
+                                };
+                            }
                         }
                         else
                         {
@@ -158,14 +195,14 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         }
 
                         break;
-                        
+
                     case "apikey":
 
                         result = accessControl
                             .Users
                             .Where(user =>
                             {
-                                return 
+                                return
                                     user.Key == token &&
                                     user.Authentication.Contains(SecurityUser.AuthenticationType.apikey);
                             }).FirstOrDefault();
@@ -185,12 +222,19 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             return await Task.FromResult<SecurityUser>(result);
         }
 
+
         /// <summary>
         /// Default Constructor
         /// </summary>
-        /// <param name="path">Path to the json file that holds the authentication / permission structure</param>
+        /// <param name="tokenValidationParameters">Validation parameters for the JWT Tokens</param>
         public UserAuthenticator()
-            => RefreshAccessList();
+            => RefreshAccessList(); // Get the new access control list
+
+        public UserAuthenticator(TokenValidationParameters tokenValidationParameters)
+        {
+            this.JWTValidationParams = tokenValidationParameters; // Assign the validator for the JWT tokens
+            RefreshAccessList(); // Get the new access control list
+        }
 
         /// <summary>
         /// Refresh the list of cached users that are validated against
@@ -210,7 +254,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         );
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
