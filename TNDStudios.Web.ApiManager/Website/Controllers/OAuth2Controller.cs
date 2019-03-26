@@ -22,7 +22,7 @@ namespace Website.Controllers
         }
 
         public OAuth2Controller(ILogger<OAuth2Controller> logger)
-            : base(logger, userAuthenticator)
+            : base(logger, userAuthenticator, Startup.JWTKey, Startup.JWTIssuer, Startup.JWTAudience)
         {
         }
     }

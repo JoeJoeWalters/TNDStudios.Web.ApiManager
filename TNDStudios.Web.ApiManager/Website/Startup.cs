@@ -14,9 +14,22 @@ namespace Website
 {
     public class Startup
     {
+        // Configuration Items available to the system from app settings
+        public static String JWTKey { get; internal set; } = String.Empty;
+        public static String JWTIssuer { get; internal set; } = String.Empty;
+        public static String JWTAudience { get; internal set; } = String.Empty;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            IConfigurationSection securityKeys = configuration.GetSection("SecurityKeys");
+            if (securityKeys != null)
+            {
+                JWTKey = securityKeys.GetValue<String>("JWTKey");
+                JWTIssuer = securityKeys.GetValue<String>("JWTIssuer");
+                JWTAudience = securityKeys.GetValue<String>("JWTAudience");
+            }
         }
 
         public IConfiguration Configuration { get; }
