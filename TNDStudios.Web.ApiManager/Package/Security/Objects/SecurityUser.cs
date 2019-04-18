@@ -44,10 +44,10 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         [JsonProperty(Required = Required.Default)]
         public String Password { get; set; } = String.Empty;
 
-        [JsonProperty(Required = Required.Default, ItemConverterType = typeof(ClaimConverter))]
+        [JsonProperty(Required = Required.Default, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore, ItemConverterType = typeof(ClaimConverter))]
         public List<Claim> SecurityClaims { get; set; }
 
-        [JsonProperty(Required = Required.Default, ItemConverterType = typeof(ClaimConverter))]
+        [JsonProperty(Required = Required.Default, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore, ItemConverterType = typeof(ClaimConverter))]
         public List<Claim> UserClaims { get; set; }
     }
 
@@ -55,7 +55,7 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(System.Security.Claims.Claim));
+            return (objectType == typeof(Claim));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -69,14 +69,28 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
             return new Claim(type, value, valueType, issuer, originalIssuer);
         }
 
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var claim = (Claim)value;
+            JObject jo = new JObject();
+            jo.Add("Type", claim.Type);
+            jo.Add("Value", IsJson(claim.Value) ? new JRaw(claim.Value) : new JValue(claim.Value));
+            jo.Add("ValueType", claim.ValueType);
+            jo.Add("Issuer", claim.Issuer);
+            jo.Add("OriginalIssuer", claim.OriginalIssuer);
+            jo.WriteTo(writer);
+        }
+
+        private bool IsJson(string val)
+        {
+            return (val != null &&
+                    (val.StartsWith("[") && val.EndsWith("]")) ||
+                    (val.StartsWith("{") && val.EndsWith("}")));
+        }
+
+        public override bool CanWrite
+        {
+            get { return true; }
         }
     }
 }

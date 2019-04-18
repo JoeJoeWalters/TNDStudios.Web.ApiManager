@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -53,6 +54,16 @@ namespace Website
                                                         });
             userAuthenticator.RefreshAccessList(accessControl);
 
+            // Add a session for the security user to store to
+            services
+                .AddDistributedMemoryCache()
+                .AddSession(options =>
+                {
+                    options.IdleTimeout = TimeSpan.FromMinutes(60);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                });
+
             // Regular system setup
             services
                 .AddCors()
@@ -61,6 +72,10 @@ namespace Website
                     {
                         options.InputFormatters.Add(new SoapFormatter());
                     })
+                .AddJsonOptions(
+                    options => 
+                        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                )
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Custom service setup for the API Manager
@@ -100,6 +115,7 @@ namespace Website
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseSession();
             app.UseMvc();
 
             // Custom app builder setup for the API Manager
