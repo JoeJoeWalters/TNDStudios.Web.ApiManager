@@ -15,11 +15,11 @@ namespace Website.Controllers
     public class ValuesController : ManagedController
     {
         // GET api/values
-        [Validate(Type: "admin", Category: "values", Permission: "read")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet, MapToApiVersion("1.0"), MapToApiVersion("1.1")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            CurrentUser?.Claims?.ForEach(claim => { });
+            CurrentUser?.SecurityClaims?.ForEach(claim => { });
 
             return new string[] { "value1", "value2" };
         }

@@ -1,5 +1,4 @@
 ﻿using TNDStudios.Web.ApiManager.Security.Objects;
-using TNDStudios.Web.ApiManager.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
@@ -36,7 +35,13 @@ namespace TNDStudios.Web.ApiManager.Controllers
                                         .Split(",")
                                         .Select(item => (SecurityUser.AuthenticationType)Enum.Parse(typeof(SecurityUser.AuthenticationType), item))
                                         .ToList(),
-                        Claims = User.Claims.ToList<Claim>().ToSecurityClaims()
+                        UserClaims = User.Claims
+                                        .Where(claim => !claim.Type.ToLower().StartsWith("security:"))
+                                        .ToList<Claim>(),
+                        SecurityClaims = User.Claims
+                                        .Where(claim => claim.Type.ToLower().StartsWith("security:"))
+                                        .Select(claim => new Claim(claim.Type.Replace("security:", String.Empty), claim.Value))
+                                        .ToList<Claim>()
                     };
                     
                     // Return the user that was stored in the user context session

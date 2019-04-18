@@ -73,7 +73,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 return AuthenticateResult.Fail("Could Authenticate The Given Credentials");
 
             // Set up the claims user and identifier for the system to use
-            List<Claim> claims = new List<Claim> {
+            user.UserClaims = new List<Claim> {
 
                 // Add the standard claim entries
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -85,23 +85,15 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                 new List<string>())),
             };
 
-            // Loop each user claim
-            user.Claims.ForEach(claim =>
-            {
-                // .. for each category they have access to ..
-                claim.Categories.ForEach(category =>
-                {
-                    // .. for each permission granted ..
-                    claim.Permissions.ForEach(permission =>
-                    {
-                        // .. add the new claim
-                        claims.Add(ValidateAttribute.ToClaim(claim.Name, category, permission));
-                    });
-                });
-            });
+            List<Claim> mergedClaims = new List<Claim>();
+            mergedClaims.AddRange(user.UserClaims);
+            mergedClaims.AddRange(
+                user.SecurityClaims
+                    .Select(claim => new Claim($"security:{claim.Type}", claim.Value))
+                    .ToList());
 
             // Generate a new identity and inject the claims in to the identity
-            var identity = new ClaimsIdentity(claims, Scheme.Name) {  };
+            var identity = new ClaimsIdentity(mergedClaims, Scheme.Name) {  };
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
 

@@ -8,11 +8,10 @@
       "Password": "password",
       "ClientId": "clientid123",
       "ClientSecret": "clientsecret123",
-      "Claims": [
+      "SecurityClaims": [
         {
-          "Name": "admin",
-          "Categories": [ "cat" ],
-          "Permissions": [ "read", "write" ]
+          "Type": "admin",
+          "Value": "full"
         }
       ]
     }

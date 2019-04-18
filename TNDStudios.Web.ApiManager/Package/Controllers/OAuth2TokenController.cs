@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -63,19 +64,21 @@ namespace TNDStudios.Web.ApiManager.Controllers
                 // Generate a new JWT Header to wrap the token
                 JwtHeader header = new JwtHeader(JWTSigningCredentials);
 
+                List<Claim> mergedClaims = new List<Claim>() { new Claim("id", securityUser.Id) };
+                mergedClaims.AddRange(
+                    securityUser
+                        .SecurityClaims
+                        .Select(claim => new Claim($"security:{claim.Type}", claim.Value))
+                        .ToList());
+
                 // Create the content of the JWT Token with the appropriate expiry date
                 // and claims to identify who the user is and what they are able to do
                 JwtPayload payload = new JwtPayload(
                     this.JWTIssuer, 
                     this.JWTAudience, 
-                    new List<Claim>()
-                    {
-                        new Claim("id", securityUser.Id),
-                        new Claim("Roles", "Admin"),
-                        new Claim("Roles", "Finance")
-                    }, 
-                    DateTime.Now, 
-                    DateTime.Now.AddSeconds(this.JWTExpiry));
+                    mergedClaims, 
+                    DateTime.UtcNow, 
+                    DateTime.UtcNow.AddSeconds(this.JWTExpiry));
 
                 // Generate the final tokem from the header and it's payload
                 JwtSecurityToken secToken = new JwtSecurityToken(header, payload);

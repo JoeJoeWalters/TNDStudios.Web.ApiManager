@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -152,9 +153,15 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                     {
                                         SecurityUser.AuthenticationType.oauth
                                     },
-                                    Claims = new List<SecurityClaim>()
+                                    UserClaims = new List<Claim>()
                                     {
-                                    }
+                                        // JWT Token will not hold anything too sensitive about the user themselves
+                                    },
+                                    SecurityClaims = jwtSecurityToken
+                                        .Claims
+                                        .Where(claim => claim.Type.ToLower().StartsWith("security:"))
+                                        .Select(claim => new Claim(claim.Type.Replace("security:", ""), claim.Value))
+                                        .ToList()
                                 };
                             }
                         }
