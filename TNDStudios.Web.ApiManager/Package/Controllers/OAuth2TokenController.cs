@@ -64,12 +64,13 @@ namespace TNDStudios.Web.ApiManager.Controllers
                 // Generate a new JWT Header to wrap the token
                 JwtHeader header = new JwtHeader(JWTSigningCredentials);
 
-                List<Claim> mergedClaims = new List<Claim>() { new Claim("id", securityUser.Id) };
-                mergedClaims.AddRange(
-                    securityUser
-                        .SecurityClaims
-                        .Select(claim => new Claim($"security:{claim.Type}", claim.Value))
-                        .ToList());
+                // Combine the claims list to a standard claim array for the JWT payload
+                List<Claim> mergedClaims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.NameIdentifier, securityUser.Id),
+                    new Claim(ClaimTypes.Name, securityUser.Username)
+                };
+                mergedClaims.AddRange(securityUser.Claims);
 
                 // Create the content of the JWT Token with the appropriate expiry date
                 // and claims to identify who the user is and what they are able to do

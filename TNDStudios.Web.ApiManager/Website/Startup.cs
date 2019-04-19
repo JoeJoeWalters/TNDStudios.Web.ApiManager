@@ -86,7 +86,7 @@ namespace Website
             // Add authorisation by policy
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("security:Admin"));
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));
             });
         }
 

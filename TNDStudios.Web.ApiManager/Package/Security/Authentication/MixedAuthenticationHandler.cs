@@ -72,28 +72,20 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             if (user == null)
                 return AuthenticateResult.Fail("Could Authenticate The Given Credentials");
 
-            // Set up the claims user and identifier for the system to use
-            user.UserClaims = new List<Claim> {
-
-                // Add the standard claim entries
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Sid, user.Key),
-                new Claim(ClaimTypes.AuthenticationMethod, 
-                            String.Join(",", 
-                                user.Authentication.Select(auth => auth.ToString()) ?? 
-                                new List<string>())),
-            };
-
-            List<Claim> mergedClaims = new List<Claim>();
-            mergedClaims.AddRange(user.UserClaims);
-            mergedClaims.AddRange(
-                user.SecurityClaims
-                    .Select(claim => new Claim($"security:{claim.Type}", claim.Value))
-                    .ToList());
-
             // Generate a new identity and inject the claims in to the identity
-            var identity = new ClaimsIdentity(mergedClaims, Scheme.Name) {  };
+            var identity = new ClaimsIdentity(user.Claims, Scheme.Name) { };
+
+            // Set up the claims user and identifier for the system to use
+            // Add the standard claim entries if they don't already exist
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
+            identity.AddClaim(new Claim(ClaimTypes.Sid, user.Key));
+            identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod,
+                            String.Join(",",
+                                user.Authentication.Select(auth => auth.ToString()) ??
+                                new List<string>() { })));
+
+            // Create the ticket required
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
 

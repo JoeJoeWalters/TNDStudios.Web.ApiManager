@@ -45,22 +45,7 @@ namespace TNDStudios.Web.ApiManager.Security.Objects
         public String Password { get; set; } = String.Empty;
 
         [JsonProperty(Required = Required.Default, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore, ItemConverterType = typeof(ClaimConverter))]
-        public List<Claim> SecurityClaims { get; set; }
-
-        [JsonProperty(Required = Required.Default, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore, ItemConverterType = typeof(ClaimConverter))]
-        public List<Claim> UserClaims { get; set; }
-
-        /// <summary>
-        /// Get the actual value of a claim type without having to query deeply each time
-        /// </summary>
-        /// <param name="userClaim">Is it a user claim?</param>
-        /// <param name="claimName">The name of the claim</param>
-        /// <returns>The value of the claim</returns>
-        public String ClaimValue(Boolean userClaim, String claimName)
-            => (userClaim ? UserClaims : SecurityClaims)
-                .Where(claim => claim.Type.ToLower() == claimName.ToLower())
-                .FirstOrDefault()?
-                .Value ?? String.Empty;
+        public List<Claim> Claims { get; set; }
     }
 
     /// <summary>

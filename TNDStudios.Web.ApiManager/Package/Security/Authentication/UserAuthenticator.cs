@@ -146,22 +146,14 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                 // Transpose the principal and the token details to the user
                                 return new SecurityUser()
                                 {
-                                    Id = jwtSecurityToken.Claims.Where(claim => claim.Type == "id").FirstOrDefault().Value,
+                                    Id = jwtSecurityToken.Claims.Where(claim => claim.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value,
                                     Key = String.Empty,
                                     Username = String.Empty,
                                     Authentication = new List<SecurityUser.AuthenticationType>()
                                     {
                                         SecurityUser.AuthenticationType.oauth
                                     },
-                                    UserClaims = new List<Claim>()
-                                    {
-                                        // JWT Token will not hold anything too sensitive about the user themselves
-                                    },
-                                    SecurityClaims = jwtSecurityToken
-                                        .Claims
-                                        .Where(claim => claim.Type.ToLower().StartsWith("security:"))
-                                        .Select(claim => new Claim(claim.Type.Replace("security:", ""), claim.Value))
-                                        .ToList()
+                                    Claims = jwtSecurityToken.Claims.ToList()
                                 };
                             }
                         }

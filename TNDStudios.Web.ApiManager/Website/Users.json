@@ -8,10 +8,14 @@
       "Password": "password",
       "ClientId": "clientid123",
       "ClientSecret": "clientsecret123",
-      "SecurityClaims": [
+      "Claims": [
         {
           "Type": "admin",
           "Value": "full"
+        },
+        {
+          "Type": "finance",
+          "Value": "readonly"
         }
       ]
     }

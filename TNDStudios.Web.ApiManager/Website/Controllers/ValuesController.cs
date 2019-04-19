@@ -21,11 +21,8 @@ namespace Website.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
             // Check we have full admin access not just partial
-            String adminLevel = CurrentUser.ClaimValue(false, "admin");
-            if (adminLevel != "full")
+            if (!User.HasClaim("admin", "full"))
                 return new UnauthorizedResult();
-
-            //CurrentUser?.SecurityClaims?.ForEach(claim => { });
 
             return new string[] { "value1", "value2" };
         }
