@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,12 @@ namespace Website.Controllers
         [HttpGet, MapToApiVersion("1.0"), MapToApiVersion("1.1")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            CurrentUser?.SecurityClaims?.ForEach(claim => { });
+            // Check we have full admin access not just partial
+            String adminLevel = CurrentUser.ClaimValue(false, "admin");
+            if (adminLevel != "full")
+                return new UnauthorizedResult();
+
+            //CurrentUser?.SecurityClaims?.ForEach(claim => { });
 
             return new string[] { "value1", "value2" };
         }
