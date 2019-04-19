@@ -2,11 +2,8 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Controllers;
 using TNDStudios.Web.ApiManager.Data.Salesforce;
-using TNDStudios.Web.ApiManager.Data.Soap;
 
 namespace Website.Controllers
 {

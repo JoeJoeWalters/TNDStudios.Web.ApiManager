@@ -1,11 +1,5 @@
-﻿using TNDStudios.Web.ApiManager.Security.Objects;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
-using System.Linq;
-using System;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace TNDStudios.Web.ApiManager.Controllers
 {

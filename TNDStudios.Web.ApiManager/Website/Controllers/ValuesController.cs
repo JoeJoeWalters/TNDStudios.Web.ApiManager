@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TNDStudios.Web.ApiManager.Controllers;
-using TNDStudios.Web.ApiManager.Security.Authentication;
 
 namespace Website.Controllers
 {
