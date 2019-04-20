@@ -19,14 +19,16 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// </summary>
         /// <param name="token">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        Task<SecurityUser> AuthenticateToken(String token);
+        SecurityUser AuthenticateToken(String token);
+        Task<SecurityUser> AuthenticateTokenAsync(String token);
 
         /// <summary>
         /// Authenticate the client id and secret against the "users" (clients in their own right essentially)
         /// </summary>
         /// <param name="tokenRequest">OAuth Request Payload</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        Task<SecurityUser> AuthenticateOAuth(OAuthTokenRequest tokenRequest);
+        SecurityUser AuthenticateOAuth(OAuthTokenRequest tokenRequest);
+        Task<SecurityUser> AuthenticateOAuthAsync(OAuthTokenRequest tokenRequest);
         
         /// <summary>
         /// Refresh the list of cached users that are validated against

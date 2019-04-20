@@ -61,7 +61,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 }
 
                 // Do the authentication by passing it to the supplied user authenticator implementation
-                user = await userAuthenticator.AuthenticateToken(header);
+                user = userAuthenticator.AuthenticateToken(header);
             }
             catch (Exception ex)
             {

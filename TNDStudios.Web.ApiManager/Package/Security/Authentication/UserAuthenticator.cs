@@ -27,8 +27,13 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
 
         public TokenValidationParameters JWTValidationParams { get; internal set; }
 
-        public async Task<SecurityUser> AuthenticateOAuth(OAuthTokenRequest tokenRequest)
+        public SecurityUser AuthenticateOAuth(OAuthTokenRequest tokenRequest)
+            => Task.Run(() => AuthenticateOAuthAsync(tokenRequest)).Result;
+
+        public async Task<SecurityUser> AuthenticateOAuthAsync(OAuthTokenRequest tokenRequest)
         {
+            SecurityUser result = null;
+
             // Not a JWT encoded bearer so compare to the API Key instead
             try
             {
@@ -36,7 +41,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                 {
                     case OAuthTokenRequest.GrantType.client_credentials:
 
-                        return accessControl
+                        result = accessControl
                             .Users
                             .Where(user =>
                             {
@@ -46,9 +51,11 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                     user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
                             }).FirstOrDefault();
 
+                        break;
+
                     case OAuthTokenRequest.GrantType.password:
 
-                        return accessControl
+                        result = accessControl
                             .Users
                             .Where(user =>
                             {
@@ -58,9 +65,11 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                     user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
                             }).FirstOrDefault();
 
+                        break;
+
                     case OAuthTokenRequest.GrantType.authorization_code:
 
-                        return accessControl
+                        result = accessControl
                             .Users
                             .Where(user =>
                             {
@@ -69,15 +78,20 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                                     user.Authentication.Contains(SecurityUser.AuthenticationType.oauth);
                             }).FirstOrDefault();
 
+                        break;
+
                     default:
 
-                        return null;
+                        result = null;
+                        break;
                 }
             }
             catch
             {
-                return null;
-            }
+                result = null;
+            };
+
+            return await Task.FromResult<SecurityUser>(result);
         }
 
         /// <summary>
@@ -86,7 +100,10 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// </summary>
         /// <param name="securityToken">The security token, usually from the header</param>
         /// <returns>The user that was found and validated, a null will be returned if no user was validated</returns>
-        public async Task<SecurityUser> AuthenticateToken(String securityToken)
+        public SecurityUser AuthenticateToken(String securityToken)
+            => Task.Run(() => AuthenticateTokenAsync(securityToken)).Result;
+
+        public async Task<SecurityUser> AuthenticateTokenAsync(String securityToken)
         {
             // Not authorised by default
             SecurityUser result = null;

@@ -25,7 +25,8 @@ namespace TNDStudios.Web.ApiManager.Controllers
         public String JWTKey { get; internal set; }
         public String JWTIssuer { get; internal set; }
         public String JWTAudience { get; internal set; }
-        public Int16 JWTExpiry { get => 300; }
+        public Int16 AccessTokenExpiry { get => 300; }
+        public Int16 RefreshTokenExpiry { get => 3600; }
         public SymmetricSecurityKey JWTSecurityKey { get; internal set; }
         public SigningCredentials JWTSigningCredentials { get; internal set; } 
 
@@ -77,7 +78,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
                     this.JWTAudience, 
                     mergedClaims, 
                     DateTime.UtcNow, 
-                    DateTime.UtcNow.AddSeconds(this.JWTExpiry));
+                    DateTime.UtcNow.AddSeconds(this.AccessTokenExpiry));
 
                 // Generate the final tokem from the header and it's payload
                 JwtSecurityToken secToken = new JwtSecurityToken(header, payload);
@@ -89,7 +90,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
                     new OAuthTokenSuccess()
                     {
                         AccessToken = tokenString,
-                        ExpiresIn = this.JWTExpiry,
+                        ExpiresIn = this.AccessTokenExpiry,
                         RefreshToken = tokenString,
                         Scope = "test",
                         TokenType = "bearer"
