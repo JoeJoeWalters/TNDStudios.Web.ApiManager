@@ -25,7 +25,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
         public String JWTKey { get; internal set; }
         public String JWTIssuer { get; internal set; }
         public String JWTAudience { get; internal set; }
-        public Int16 JWTExpiry { get => 3600; }
+        public Int16 JWTExpiry { get => 300; }
         public SymmetricSecurityKey JWTSecurityKey { get; internal set; }
         public SigningCredentials JWTSigningCredentials { get; internal set; } 
 
