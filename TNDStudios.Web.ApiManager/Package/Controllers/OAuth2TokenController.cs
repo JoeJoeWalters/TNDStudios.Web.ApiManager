@@ -57,7 +57,7 @@ namespace TNDStudios.Web.ApiManager.Controllers
         public virtual ActionResult Post(OAuthTokenRequest request)
         {
             // Check the client id and secret being asked for;
-            SecurityUser securityUser = Authenticator.AuthenticateOAuth(request).Result;            
+            SecurityUser securityUser = Authenticator.AuthenticateOAuth(request);            
             if (securityUser != null)
             {
                 // Generate a new JWT Header to wrap the token
