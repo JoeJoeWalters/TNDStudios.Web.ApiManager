@@ -108,6 +108,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             // Not authorised by default
             SecurityUser result = null;
 
+            // The time the token started to validate so it is consistent
+            DateTime tokenReceivedTime = DateTime.UtcNow;
+
             try
             {
                 // Basic authentication requested
@@ -144,6 +147,12 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
                         {
                             // TODO: Get the user details from the JWT Token instead of the access control list
                             JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)jwtToken;
+
+                            // Check the expiry date of the token, if it has expired we need to tell the source
+                            // system and get them to request a new token with the refresh token
+                            if (!(jwtSecurityToken.ValidFrom <= tokenReceivedTime &&
+                                jwtSecurityToken.ValidTo >= tokenReceivedTime))
+                                throw new Exception("Lifetime validation failed. The token is expired");
 
                             // Validate the token and get the principal
                             SecurityToken validatedToken = null;

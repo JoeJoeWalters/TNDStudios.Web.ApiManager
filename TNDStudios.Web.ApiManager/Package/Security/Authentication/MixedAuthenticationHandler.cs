@@ -9,6 +9,9 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
@@ -33,6 +36,9 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             // Assign the user authenticator to use (could be database, json file etc.)
             this.userAuthenticator = userAuthenticator;
         }
+
+        protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+            => base.HandleChallengeAsync(properties);
 
         /// <summary>
         /// Authenticate the request against the cached user credentials
@@ -65,6 +71,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             }
             catch (Exception ex)
             {
+                Response.Headers.Add(new KeyValuePair<string, StringValues>(HeaderNames.WWWAuthenticate, ((ex.InnerException != null) ? ex.InnerException.Message : ex.Message)));
                 return AuthenticateResult.Fail(ex.Message);
             }
 
@@ -92,5 +99,6 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
             // Return that the authentication was successful and return the authentication ticket
             return AuthenticateResult.Success(ticket);
         }
+
     }
 }
