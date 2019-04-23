@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,10 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using TNDStudios.Web.ApiManager.Security.Objects;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
 
 namespace TNDStudios.Web.ApiManager.Security.Authentication
 {
-    public class MixedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class MixedAuthenticationHandler : AuthenticationHandler<MixedAuthenticationOptions>
     {
         /// <summary>
         /// Local reference to the user authenticator
@@ -26,7 +24,7 @@ namespace TNDStudios.Web.ApiManager.Security.Authentication
         /// Default constructor
         /// </summary>
         public MixedAuthenticationHandler(
-            IOptionsMonitor<AuthenticationSchemeOptions> options,
+            IOptionsMonitor<MixedAuthenticationOptions> options,
             ILoggerFactory loggerFactory,
             UrlEncoder encoder,
             ISystemClock clock,

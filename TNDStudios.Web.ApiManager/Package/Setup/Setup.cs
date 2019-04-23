@@ -25,7 +25,11 @@ namespace TNDStudios.Web.ApiManager
         {
             // Configure mixed authentication so the api validates requests against this handler
             serviceCollection.AddAuthentication("MixedAuthenticationHandler")
-                .AddScheme<AuthenticationSchemeOptions, MixedAuthenticationHandler>("MixedAuthenticationHandler", null);
+                .AddScheme<MixedAuthenticationOptions, MixedAuthenticationHandler>("MixedAuthenticationHandler", 
+                    options => 
+                    {
+                        options.SaveTokens = true;
+                    });
 
             // Configure DI for application services and inject the authenticator
             serviceCollection.AddScoped<IUserAuthenticator>(implementationFactory => { return userAuthenticator; });
